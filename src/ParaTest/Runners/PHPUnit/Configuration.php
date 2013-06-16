@@ -1,34 +1,9 @@
 <?php namespace ParaTest\Runners\PHPUnit;
 
-/**
- * Class Configuration
- *
- * Stores information about the phpunit xml
- * configuration being used to run tests
- *
- * @package ParaTest\Runners\PHPUnit
- */
 class Configuration
 {
-    /**
-     * Path to the configuration file
-     *
-     * @var string
-     */
     protected $path;
-
-    /**
-     * @var \SimpleXMLElement
-     */
     protected $xml;
-
-    /**
-     * A collection of datastructures
-     * build from the <testsuite> nodes inside of a
-     * PHPUnit configuration
-     *
-     * @var array
-     */
     protected $suites = array();
 
     public function __construct($path)
@@ -51,23 +26,11 @@ class Configuration
             return '';
     }
 
-    /**
-     * Returns the path to the phpunit configuration
-     * file
-     *
-     * @return string
-     */
     public function getPath()
     {
         return $this->path;
     }
 
-    /**
-     * Return the contents of the <testsuite> nodes
-     * contained in a PHPUnit configuration
-     *
-     * @return array|null
-     */
     public function getSuites()
     {
         if(!$this->xml) return null;
@@ -79,12 +42,6 @@ class Configuration
         return $suites;
     }
 
-    /**
-     * Return the path of the directory
-     * that contains the phpunit configuration
-     *
-     * @return string
-     */
     public function getConfigDir()
     {
         return dirname($this->path) . DIRECTORY_SEPARATOR;
@@ -104,12 +61,6 @@ class Configuration
         throw new \RuntimeException("Suite path $path could not be found");
     }
 
-    /**
-     * Converting the configuration to a string
-     * returns the configuration path
-     *
-     * @return string
-     */
     public function __toString()
     {
         return $this->path;

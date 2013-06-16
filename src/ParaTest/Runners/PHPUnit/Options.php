@@ -1,60 +1,12 @@
 <?php namespace ParaTest\Runners\PHPUnit;
 
-/**
- * Class Options
- *
- * An object containing all configurable information used
- * to run PHPUnit via ParaTest
- *
- * @package ParaTest\Runners\PHPUnit
- */
 class Options
 {
-    /**
-     * The number of processes to run at a time
-     *
-     * @var int
-     */
     protected $processes;
-
-    /**
-     * The test path pointing to tests that will
-     * be run
-     *
-     * @var string
-     */
     protected $path;
-
-    /**
-     * The path to the PHPUnit binary that will be run
-     *
-     * @var string
-     */
     protected $phpunit;
-
-    /**
-     * Determines whether or not ParaTest runs in
-     * functional mode. If enabled, ParaTest will run
-     * every test method in a separate process
-     *
-     * @var string
-     */
     protected $functional;
-
-    /**
-     * A collection of post-processed option values. This is the collection
-     * containing ParaTest specific options
-     *
-     * @var array
-     */
     protected $filtered;
-
-    /**
-     * A collection of option values directly corresponding
-     * to certain annotations - i.e group
-     *
-     * @var array
-     */
     protected $annotations = array();
 
     public function __construct($opts = array())
@@ -66,35 +18,27 @@ class Options
         $this->path = $opts['path'];
         $this->phpunit = $opts['phpunit'];
         $this->functional = $opts['functional'];
+        $this->runner = $opts['runner'];
+        $this->noTestTokens = $opts['no-test-tokens'];
 
         $this->filtered = $this->filterOptions($opts);
         $this->initAnnotations();
     }
 
-    /**
-     * Public read accessibility
-     *
-     * @param $var
-     * @return mixed
-     */
     public function __get($var)
     {
         return $this->$var;
     }
 
-    /**
-     * Returns a collection of ParaTest's default
-     * option values
-     *
-     * @return array
-     */
     protected static function defaults()
     {
         return array(
             'processes' => 5,
             'path' => '',
             'phpunit' => static::phpunit(),
-            'functional' => false
+            'functional' => false,
+            'runner' => 'Runner',
+            'no-test-tokens' => false,
         );
     }
 
@@ -143,7 +87,9 @@ class Options
             'processes' => $this->processes,
             'path' => $this->path,
             'phpunit' => $this->phpunit,
-            'functional' => $this->functional
+            'functional' => $this->functional,
+            'runner' => $this->runner,
+            'no-test-tokens' => $this->noTestTokens,
         ));
         if($configuration = $this->getConfigurationPath($filtered))
             $filtered['configuration'] = new Configuration($configuration);

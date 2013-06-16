@@ -13,22 +13,22 @@ class UsageTest extends FunctionalTestBase
 
     public function testCallingParaTestWithShortHelpOptionDisplaysUsage()
     {
-        $output = $this->getParaTestOutput(false, '-h');
-        $this->assertEquals($this->normalizeStr($this->usage), $this->normalizeStr($output));
+        $output = $this->getParaTestOutput(false, '-h');   
+        $this->assertEquals($this->usage, $output);
     }
 
     public function testCallingParaTestWithLongHelpOptionDisplaysUsage()
     {
         $output = $this->getParaTestOutput(false, '--help');
-        $this->assertEquals($this->normalizeStr($this->usage), $this->normalizeStr($output));
+        $this->assertEquals($this->usage, $output);
     }
 
     protected function getParaTestOutput($functional = false, $options = '')
     {
-        $proc = new \Symfony\Component\Process\Process(PARA_BINARY . ' ' . $options);
+        $proc = proc_open(PARA_BINARY . ' ' . $options, FunctionalTestBase::$descriptorspec, $pipes);
         $this->waitForProc($proc);
-        $output = $proc->getOutput();
-
+        $output = $this->getOutput($pipes);
+        proc_close($proc);
         return $output;
     }
 }

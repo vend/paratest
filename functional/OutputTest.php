@@ -12,15 +12,17 @@ class OutputTest extends FunctionalTestBase
     public function testInstantFeedbackIsDisplayed()
     {
         $output = $this->getParaTestOutput();
-        $this->assertContains("Running phpunit in 5 processes with " . PHPUNIT, $output);
-        $this->assertContains("Configuration read from " . getcwd() . DS . 'phpunit.xml.dist', $output);
-        $this->assertRegExp('/[.F]{4}/', $output);
+        $this->assertRegExp(
+            '/^\nRunning phpunit in 5 processes with ' . 
+            $this->getPhpUnitForRegEx() .
+            '\n\nConfiguration read from ' . str_replace('/', '\\/', getcwd() . DS . 'phpunit\.xml\.dist') .
+            '\n\n\.F\.\./', $output);
     }
 
     public function testMessagePrintedWhenInvalidConfigFileSupplied()
     {
         $output = $this->getParaTestOutput(false, array('configuration' => 'nope.xml'));
-        $this->assertContains('Could not read "nope.xml"', $output);
+        $this->assertRegExp('/^Could not read "nope\.xml"\.\n$/', $output);
     }
 
     public function testInstantFeedbackIsDisplayedWhenAndFunctionalModeDsiplayed()
@@ -38,16 +40,20 @@ class OutputTest extends FunctionalTestBase
     public function testProcCountIsReportedWithShortProcOption()
     {
         $output = $this->getParaTestOutput(false, array('p' => '1'));
-        $this->assertContains("Running phpunit in 1 process with " . PHPUNIT, $output);
-        $this->assertContains("Configuration read from " . getcwd() . DS . 'phpunit.xml.dist', $output);
-        $this->assertRegExp('/[.F]{4}/', $output);
+        $this->assertRegExp(
+            '/^\nRunning phpunit in 1 process with ' . 
+            $this->getPhpUnitForRegEx() .
+            '\n\nConfiguration read from ' . str_replace('/', '\\/', getcwd() . DS . 'phpunit\.xml\.dist') .
+            '\n\n\.F\.\./', $output);
     }
 
     protected function assertFunctionalModeIsOnWithFeedback($output)
     {
-        $this->assertContains("Running phpunit in 5 processes with " . PHPUNIT, $output);
-        $this->assertContains("Functional mode is on", $output);
-        $this->assertRegExp('/[.F]{4}/', $output);
+        $this->assertRegExp(
+            '/^\nRunning phpunit in 5 processes with ' .
+            $this->getPhpUnitForRegEx() .
+            '. Functional mode is on' .
+            '\n\n[.FE]*/', $output);
     }
 
     protected function getPhpUnitForRegEx()
