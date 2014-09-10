@@ -82,6 +82,16 @@ abstract class ExecutableTest
     }
 
     /**
+     * Return the test process' stdout contents
+     *
+     * @return string
+     */
+    public function getStdout()
+    {
+        return $this->process->getOutput();
+    }
+
+    /**
      * Stop the process and return it's
      * exit code
      *
